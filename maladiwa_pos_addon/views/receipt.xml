@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template
+        id="receipt_maladiwa"
+        inherit_id="point_of_sale.pos_order_receipt"
+        priority="90"
+    >
+        <xpath expr="//html[@id='pos-receipt']/head" position="inside">
+            <style>
+                .maladiwa-receipt {
+                    padding: 12px 20px;
+                    font-family: Arial, sans-serif;
+                    line-height: 1.22;
+                }
+                .maladiwa-center { text-align: center; }
+                .maladiwa-small { font-size: .78em; }
+                .maladiwa-logo {
+                    width: 175px;
+                    max-height: 180px;
+                    object-fit: contain;
+                }
+                .maladiwa-divider {
+                    border-top: 1px dashed #000;
+                    margin: 10px auto;
+                    width: 75%;
+                }
+                .maladiwa-title {
+                    font-size: 1.3em;
+                    margin-top: 30px;
+                }
+                .maladiwa-items { margin-top: 38px; }
+                .maladiwa-receipt table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                .maladiwa-receipt td {
+                    padding: 3px 0;
+                    vertical-align: top;
+                }
+                .maladiwa-right {
+                    text-align: right;
+                    white-space: nowrap;
+                    padding-left: 12px !important;
+                }
+                .maladiwa-total {
+                    font-size: 1.2em;
+                    border-top: 1px dashed #000;
+                }
+                .maladiwa-usd { font-size: 1.2em; }
+                .maladiwa-payments { margin-top: 50px; }
+                .maladiwa-banks { margin-top: 70px; }
+                .maladiwa-order { margin-top: 25px; }
+            </style>
+        </xpath>
+
+        <xpath expr="//html[@id='pos-receipt']/div" position="attributes">
+            <attribute name="t-if">not extra_data.get('maladiwa')</attribute>
+        </xpath>
+
+        <xpath expr="//html[@id='pos-receipt']/div" position="before">
+            <div t-if="extra_data.get('maladiwa')" class="maladiwa-receipt">
+                <t t-set="m" t-value="extra_data['maladiwa']"/>
+                <t t-set="maladiwa_items" t-value="m['items']"/>
+
+                <div class="maladiwa-center">
+                    <img
+                        t-if="image.get('logo')"
+                        t-att-src="image['logo']"
+                        class="maladiwa-logo"
+                        alt="Restaurant logo"
+                    />
+
+                    <div class="maladiwa-small">
+                        <div t-out="config.get('maladiwa_restaurant_name') or company['name']"/>
+                        <div t-if="config.get('phone')">
+                            Tel: <t t-out="config['phone']"/>
+                        </div>
+                        <div t-if="company.get('vat')">
+                            Tax ID: <t t-out="company['vat']"/>
+                        </div>
+                        <div t-if="config.get('email')" t-out="config['email']"/>
+                    </div>
+
+                    <div class="maladiwa-divider"/>
+
+                    <div class="maladiwa-small">
+                        <div>
+                            Served by <t t-out="extra_data['cashier_name']"/>
+                        </div>
+                        <div t-if="m['table']">
+                            at table T<t t-out="m['table']"/>
+                        </div>
+                        <div t-if="m['guests']">
+                            Guests: <t t-out="m['guests']"/>
+                        </div>
+                    </div>
+
+                    <div class="maladiwa-title">
+                        <t t-if="m['is_refund']">Refund</t>
+                        <t t-else="">Tax Invoice</t>
+                    </div>
+
+                    <div>
+                        Tax Invoice No: <t t-out="m['reference']"/>
+                    </div>
+                </div>
+
+                <table class="maladiwa-items">
+                    <tbody>
+                        <tr t-foreach="maladiwa_items" t-as="item">
+                            <td>
+                                <span t-out="item['name']"/>
+                                <div t-if="item['qty'] != '1'" class="maladiwa-small">
+                                    Qty: <t t-out="item['qty']"/>
+                                </div>
+                                <div t-if="item['discount'] != '0'" class="maladiwa-small">
+                                    Discount: <t t-out="item['discount']"/>%
+                                </div>
+                            </td>
+                            <td class="maladiwa-right" t-out="item['amount']"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Subtotal</td>
+                            <td class="maladiwa-right" t-out="m['subtotal']"/>
+                        </tr>
+                        <tr>
+                            <td>GST</td>
+                            <td class="maladiwa-right" t-out="m['gst']"/>
+                        </tr>
+                        <tr t-if="m['has_service']">
+                            <td t-out="m['service_label']"/>
+                            <td class="maladiwa-right" t-out="m['service']"/>
+                        </tr>
+                        <tr t-if="m['has_rounding']">
+                            <td>Rounding</td>
+                            <td class="maladiwa-right" t-out="m['rounding']"/>
+                        </tr>
+                        <tr class="maladiwa-total">
+                            <td>TOTAL</td>
+                            <td class="maladiwa-right" t-out="m['total']"/>
+                        </tr>
+                        <tr class="maladiwa-usd">
+                            <td>TOTAL $ :</td>
+                            <td class="maladiwa-right" t-out="m['usd']"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="maladiwa-small maladiwa-right">
+                    USD 1 = MVR <t t-out="m['rate']"/>
+                </div>
+
+                <table class="maladiwa-payments">
+                    <tbody>
+                        <tr t-foreach="payments" t-as="payment">
+                            <td t-out="payment['payment_method_data']['name']"/>
+                            <td class="maladiwa-right" t-out="payment['amount']"/>
+                        </tr>
+                        <tr class="maladiwa-total">
+                            <td>CHANGE</td>
+                            <td class="maladiwa-right" t-out="m['change']"/>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="maladiwa-banks maladiwa-small maladiwa-center">
+                    <div t-if="config.get('maladiwa_bank_mvr')">
+                        MVR Bank Account Number:
+                        <t t-out="config['maladiwa_bank_mvr']"/>
+                    </div>
+                    <div t-if="config.get('maladiwa_bank_usd')">
+                        USD Bank Account Number:
+                        <t t-out="config['maladiwa_bank_usd']"/>
+                    </div>
+                </div>
+
+                <div class="maladiwa-order maladiwa-small maladiwa-center">
+                    <div>Order <t t-out="m['reference']"/></div>
+                    <div t-out="extra_data['formated_date_order']"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="settings_maladiwa_pos" model="ir.ui.view">
+        <field name="name">res.config.settings.maladiwa.pos</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='restaurant_section']" position="after">
+                <block title="Maladiwa Restaurant" id="maladiwa_restaurant">
+
+                    <setting
+                        string="Prepare dine-in service charge"
+                        help="Creates a 10% dine-in preset and a no-charge takeaway preset. Close the POS session first."
+                    >
+                        <button
+                            name="action_maladiwa_prepare"
+                            type="object"
+                            string="Prepare Maladiwa POS"
+                            class="btn-primary"
+                            invisible="pos_has_active_session"
+                        />
+                        <div class="text-warning" invisible="not pos_has_active_session">
+                            Close the session to prepare the addon.
+                        </div>
+                    </setting>
+
+                    <setting
+                        string="Maladiwa receipt"
+                        help="Uses your POS receipt logo, contact details and company Tax ID."
+                    >
+                        <field
+                            name="pos_maladiwa_receipt_enabled"
+                            readonly="pos_has_active_session"
+                        />
+                    </setting>
+
+                    <setting
+                        string="GST"
+                        help="Select your existing sales GST tax, initially 16%. Edit its rate in Odoo Taxes and assign it to your food products. The service fee inherits the items' taxes."
+                    >
+                        <field
+                            name="pos_maladiwa_gst_tax_id"
+                            readonly="pos_has_active_session"
+                            domain="[('type_tax_use', '=', 'sale'), ('amount_type', '=', 'percent')]"
+                        />
+                    </setting>
+
+                    <setting
+                        string="Dine-in preset"
+                        help="Open this preset to edit the percentage. It starts at 10%, based on the order after discounts."
+                    >
+                        <field name="pos_maladiwa_dine_in_preset_id"/>
+                    </setting>
+
+                    <setting
+                        string="Takeaway preset"
+                        help="Use this preset for orders without service charge."
+                    >
+                        <field name="pos_maladiwa_takeaway_preset_id"/>
+                    </setting>
+
+                    <setting
+                        string="Service charge product"
+                        help="Set its income account in Odoo if you use a separate service-charge revenue account."
+                    >
+                        <field name="pos_maladiwa_service_product_id"/>
+                    </setting>
+
+                    <setting string="Receipt restaurant name">
+                        <field
+                            name="pos_maladiwa_restaurant_name"
+                            readonly="pos_has_active_session"
+                        />
+                    </setting>
+
+                    <setting
+                        string="MVR per USD"
+                        help="Receipt display only. Each new order keeps its exchange rate for reprints."
+                    >
+                        <field
+                            name="pos_maladiwa_usd_rate"
+                            readonly="pos_has_active_session"
+                        />
+                    </setting>
+
+                    <setting string="MVR bank account">
+                        <field
+                            name="pos_maladiwa_bank_mvr"
+                            readonly="pos_has_active_session"
+                        />
+                    </setting>
+
+                    <setting string="USD bank account">
+                        <field
+                            name="pos_maladiwa_bank_usd"
+                            readonly="pos_has_active_session"
+                        />
+                    </setting>
+
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
