@@ -46,11 +46,7 @@ class ResUsers(models.Model):
 
         for user in self:
             key = "maladiwa_pos_addon.cashier_pos.%s" % user.id
-
-            try:
-                config_id = int(parameters.get_param(key, "0"))
-            except (TypeError, ValueError):
-                config_id = 0
+            config_id = parameters.get_int(key, 0)
 
             user.maladiwa_pos_config_id = (
                 self.env["pos.config"].browse(config_id).exists()
@@ -70,13 +66,12 @@ class ResUsers(models.Model):
         parameters = self.env["ir.config_parameter"].sudo()
 
         for user in self:
-            parameters.set_param(
+            parameters.set_int(
                 "maladiwa_pos_addon.cashier_pos.%s" % user.id,
-                str(user.maladiwa_pos_config_id.id)
+                user.maladiwa_pos_config_id.id
                 if user.maladiwa_pos_config_id
-                else False,
+                else 0,
             )
-
     @api.constrains(
         "group_ids",
         "maladiwa_pos_config_id",

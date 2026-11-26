@@ -1,6 +1,6 @@
 {
     "name": "Maladiwa POS Addon",
-    "version": "20.0.1.0.3",
+    "version": "20.0.1.0.4",
     "summary": "Dine-in service charge and Maladiwa MVR/USD restaurant receipt",
     "category": "Sales/Point of Sale",
     "author": "Maladiwa",
