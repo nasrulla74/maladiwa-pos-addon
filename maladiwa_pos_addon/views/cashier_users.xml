@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_maladiwa_cashier" model="ir.ui.view">
+        <field name="name">res.users.form.maladiwa.cashier</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='access_rights']" position="inside">
+                <group string="Maladiwa POS" groups="base.group_system">
+                    <field name="maladiwa_cashier" readonly="1"/>
+                    <field name="maladiwa_pos_config_id"
+                           domain="[('company_id', 'in', company_ids)]"
+                           options="{'no_create': True}"/>
+                    <div colspan="2" class="text-muted">
+                        Select Cashier under Maladiwa POS in Access Rights
+                        and assign a POS. A manager must open the register
+                        before the cashier logs in.
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <template id="cashier_register_closed" name="Cashier register closed">
+        <t t-call="web.layout">
+            <div class="container py-5">
+                <h1>Register is not open</h1>
+                <p>
+                    Ask your manager to open your assigned POS register,
+                    then try again.
+                </p>
+                <a href="/maladiwa/pos" class="btn btn-primary">
+                    Try again
+                </a>
+                <a href="/web/session/logout?redirect=/web/login"
+                   class="btn btn-secondary">
+                    Sign out
+                </a>
+            </div>
+        </t>
+    </template>
+</odoo>

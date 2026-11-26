@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="maladiwa_pos_addon.CashierMenu"
+       t-inherit="point_of_sale.BurgerMenuDialog"
+       t-inherit-mode="extension">
+
+        <xpath expr="//t[@t-name='customer_display']"
+               position="attributes">
+            <attribute name="t-if">this.pos.accessRight.canAccessCustomerDisplay and !this.pos.accessRight.maladiwaCashier</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-name='install-app']"
+               position="attributes">
+            <attribute name="t-if">!this.isDisplayStandalone and this.pos.accessRight.canInstallApp and !this.pos.accessRight.maladiwaCashier</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-name='create_product']"
+               position="attributes">
+            <attribute name="t-if">this.showCreateProductButton and !this.pos.accessRight.maladiwaCashier</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-name='backend']"
+               position="attributes">
+            <attribute name="t-if">this.pos.accessRight.canGoToBackend and !this.pos.accessRight.maladiwaCashier</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-name='close_register']"
+               position="attributes">
+            <attribute name="t-if">this.pos.accessRight.canCloseSession and !this.pos.accessRight.maladiwaCashier</attribute>
+        </xpath>
+    </t>
+</templates>
