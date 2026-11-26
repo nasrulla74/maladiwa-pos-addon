@@ -57,6 +57,7 @@ patch(GeneratePrinterData.prototype, {
       rounding: number(rounding),
       has_rounding: !this.currency.isZero(rounding),
       reference: order.pos_reference || order.name,
+      invoice_reference: order.name && order.name !== '/' ? order.name : 'Pending',
       table: order.table_id ? String(order.table_id.table_number) : '',
       guests: order.customer_count || 0,
       is_refund: total < 0,

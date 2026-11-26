@@ -109,6 +109,9 @@ class PosOrder(models.Model):
             "rounding": number(rounding),
             "has_rounding": not self.currency_id.is_zero(rounding),
             "reference": self.pos_reference or self.name,
+            "invoice_reference": (
+                self.name if self.name and self.name != "/" else "Pending"
+            ),
             "table": str(self.table_id.table_number) if self.table_id else "",
             "guests": self.customer_count,
             "is_refund": total < 0,

@@ -101,7 +101,7 @@
                     </div>
 
                     <div>
-                        Tax Invoice No: <t t-out="m['reference']"/>
+                        Tax Invoice No: <t t-out="m['invoice_reference']"/>
                     </div>
                 </div>
 
@@ -151,9 +151,7 @@
                     </tbody>
                 </table>
 
-                <div class="maladiwa-small maladiwa-right">
-                    USD 1 = MVR <t t-out="m['rate']"/>
-                </div>
+
 
                 <table class="maladiwa-payments">
                     <tbody>
