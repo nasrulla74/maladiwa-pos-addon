@@ -1,6 +1,6 @@
 {
     "name": "Maladiwa POS Addon",
-       "version": "20.0.1.0.1",
+    "version": "20.0.1.0.2",
     "summary": "Dine-in service charge and Maladiwa MVR/USD restaurant receipt",
     "category": "Sales/Point of Sale",
     "author": "Maladiwa",
@@ -10,11 +10,13 @@
         "views/settings.xml",
         "views/receipt.xml",
     ],
-    "assets": {
-        "point_of_sale._assets_pos": [
-            "maladiwa_pos_addon/static/src/js/receipt.js",
-        ],
-    },
+"assets": {
+    "point_of_sale._assets_pos": [
+        "maladiwa_pos_addon/static/src/js/receipt.js",
+        "maladiwa_pos_addon/static/src/js/full_receipt_only.js",
+    ],
+},
+
     "installable": True,
     "application": False,
 }
