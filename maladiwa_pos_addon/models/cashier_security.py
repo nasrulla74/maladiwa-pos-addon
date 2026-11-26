@@ -149,7 +149,60 @@ class PosSession(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        require_non_cashier(self.env)
+        if is_cashier(self.env.user):
+            user = self.env.user
+            config = user.sudo().maladiwa_pos_config_id
+
+            if (
+                not config
+                or not config.active
+                or config.company_id not in user.company_ids
+            ):
+                raise AccessError(
+                    _(
+                        "Ask your manager to assign an active POS "
+                        "to your account."
+                    )
+                )
+
+            prepared = []
+
+            for vals in vals_list:
+                config_id = (
+                    vals.get("config_id")
+                    or self.env.context.get("default_config_id")
+                )
+
+                if config_id != config.id:
+                    raise AccessError(
+                        _("You may only open your assigned POS register.")
+                    )
+
+                if (
+                    vals.get("state", "opening_control")
+                    != "opening_control"
+                    or "stop_at" in vals
+                    or vals.get("user_id", user.id) != user.id
+                ):
+                    raise AccessError(
+                        _(
+                            "Cashiers may only create a new "
+                            "opening session for themselves."
+                        )
+                    )
+
+                prepared.append(
+                    dict(
+                        vals,
+                        config_id=config.id,
+                        user_id=user.id,
+                        state="opening_control",
+                        stop_at=False,
+                    )
+                )
+
+            vals_list = prepared
+
         return super().create(vals_list)
 
     def close_session_from_ui(self, payment_method_closing=None):

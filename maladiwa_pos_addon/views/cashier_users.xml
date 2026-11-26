@@ -13,8 +13,7 @@
                            options="{'no_create': True}"/>
                     <div colspan="2" class="text-muted">
                         Select Cashier under Maladiwa POS in Access Rights
-                        and assign a POS. A manager must open the register
-                        before the cashier logs in.
+                        and assign a POS. Cashiers may open their assigned register but cannot close it.
                     </div>
                 </group>
             </xpath>
@@ -24,11 +23,8 @@
     <template id="cashier_register_closed" name="Cashier register closed">
         <t t-call="web.layout">
             <div class="container py-5">
-                <h1>Register is not open</h1>
-                <p>
-                    Ask your manager to open your assigned POS register,
-                    then try again.
-                </p>
+                <h1>Register is unavailable</h1>
+<p>Ask your manager to finish closing the register, then try again.</p>
                 <a href="/maladiwa/pos" class="btn btn-primary">
                     Try again
                 </a>

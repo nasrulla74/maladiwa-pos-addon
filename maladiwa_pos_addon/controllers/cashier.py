@@ -73,8 +73,8 @@ class CashierPos(PosController):
         config = assigned_pos(user)
 
         if (
-            not config.current_session_id
-            or config.current_session_id.state
+            config.current_session_id
+            and config.current_session_id.state
             not in ("opening_control", "opened")
         ):
             return request.render(
@@ -102,8 +102,8 @@ class CashierPos(PosController):
                 return request.redirect(ENTRY_URL, code=303)
 
             if (
-                not config.current_session_id
-                or config.current_session_id.state
+                config.current_session_id
+                and config.current_session_id.state
                 not in ("opening_control", "opened")
             ):
                 return request.redirect(ENTRY_URL, code=303)
